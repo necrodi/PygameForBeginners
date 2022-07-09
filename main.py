@@ -28,7 +28,6 @@ RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.pn
 YELLOW_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, SPACESHIP_SIZE), 90)
 RED_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, SPACESHIP_SIZE), -90)
 
-
 def draw_window(yellow, red):
     WIN.fill(BACKGROUND)
     pygame.draw.rect(WIN, BORDER_COLOR, BORDER)
@@ -37,13 +36,13 @@ def draw_window(yellow, red):
     pygame.display.update()
     
 def yellow_move(keys_pressed, rect):
-    if keys_pressed[pygame.K_a]: #LEFT
+    if keys_pressed[pygame.K_a] and (rect.left - VEL) > 0: #LEFT
         rect.x -= VEL
-    if keys_pressed[pygame.K_d]: #RIGHT
+    if keys_pressed[pygame.K_d] and (rect.right + VEL) < BORDER_START: #RIGHT
         rect.x += VEL
-    if keys_pressed[pygame.K_w]: #UP
+    if keys_pressed[pygame.K_w] and (rect.top - VEL) > 0: #UP
         rect.y -= VEL
-    if keys_pressed[pygame.K_s]: #DOWN
+    if keys_pressed[pygame.K_s] and (rect.bottom + VEL) < HEIGHT: #DOWN
         rect.y += VEL
 
 def red_move(keys_pressed, rect):
