@@ -9,6 +9,9 @@ FPS = 60
 VEL = 5
 SPACESHIP_OFFSET_Y = 15
 SPACESHIP_OFFSET_X = 15
+BULLETS_MAX = 3
+BULLET_VEL = 7
+BULLET_SIZE = BULLET_WIDTH, BULLET_HEIGHT = 10, 5
 
 #immutable CONSTANTS
 BORDER_START = WIDTH/2 - BORDER_WIDTH/2
@@ -61,14 +64,26 @@ def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     
-    clock = pygame.time.Clock()
+    red_bullets = []
+    yellow_bullets = []
     
+    clock = pygame.time.Clock()
     run = True
+    
     while run:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LCTRL and len(yellow_bullets) < BULLETS_MAX:
+                    bullet = pygame.Rect(yellow.right, yellow.centery, BULLET_WIDTH, BULLET_HEIGHT)
+                    yellow_bullets.append(bullet)
+                    
+                if event.key == pygame.K_RCTRL and len(red_bullets) < BULLETS_MAX:
+                    bullet = pygame.Rect(red.left, red.centery, BULLET_WIDTH, BULLET_HEIGHT)
+                    red_bullets.append(bullet)
         
         keys_pressed = pygame.key.get_pressed()
         yellow_move(keys_pressed, yellow)
