@@ -7,8 +7,8 @@ SIZE = WIDTH, HEIGHT = 900,500
 BORDER_WIDTH = 10
 FPS = 60
 VEL = 5
-YELLOW_OFFSET_Y = 15
-YELLOW_OFFSET_X = 15
+SPACESHIP_OFFSET_Y = 15
+SPACESHIP_OFFSET_X = 15
 
 #immutable CONSTANTS
 BORDER_START = WIDTH/2 - BORDER_WIDTH/2
@@ -40,21 +40,21 @@ def draw_window(yellow, red):
 def yellow_move(keys_pressed, rect):
     if keys_pressed[pygame.K_a] and (rect.left - VEL) > 0: #LEFT
         rect.x -= VEL
-    if keys_pressed[pygame.K_d] and (rect.right + VEL) < BORDER_START + YELLOW_OFFSET_X: #RIGHT
+    if keys_pressed[pygame.K_d] and (rect.right + VEL) < BORDER_START + SPACESHIP_OFFSET_X: #RIGHT
         rect.x += VEL
     if keys_pressed[pygame.K_w] and (rect.top - VEL) > 0: #UP
         rect.y -= VEL
-    if keys_pressed[pygame.K_s] and (rect.bottom + VEL) < HEIGHT - YELLOW_OFFSET_Y: #DOWN
+    if keys_pressed[pygame.K_s] and (rect.bottom + VEL) < HEIGHT - SPACESHIP_OFFSET_Y: #DOWN
         rect.y += VEL
 
 def red_move(keys_pressed, rect):
-    if keys_pressed[pygame.K_LEFT]: #LEFT
+    if keys_pressed[pygame.K_LEFT] and (rect.left - VEL) > BORDER_END: #LEFT
         rect.x -= VEL
-    if keys_pressed[pygame.K_RIGHT]: #RIGHT
+    if keys_pressed[pygame.K_RIGHT] and (rect.right + VEL) < WIDTH + SPACESHIP_OFFSET_X: #RIGHT
         rect.x += VEL
-    if keys_pressed[pygame.K_UP]: #UP
+    if keys_pressed[pygame.K_UP] and (rect.top - VEL) > 0: #UP
         rect.y -= VEL
-    if keys_pressed[pygame.K_DOWN]: #DOWN
+    if keys_pressed[pygame.K_DOWN] and (rect.bottom + VEL) < HEIGHT - SPACESHIP_OFFSET_Y: #DOWN
         rect.y += VEL
         
 def main():
