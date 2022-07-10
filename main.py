@@ -39,6 +39,8 @@ pygame.display.set_caption("First Game")
 AMBIENCE = pygame.mixer.Sound(os.path.join('Assets', 'spaceship-ambience-with-effects-21420.wav'))
 BULLET_FIRE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'teleport-14639.wav'))
 BULLET_HIT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'low-impactwav-14905.wav'))
+
+pygame.mixer.Sound.set_volume(BULLET_HIT_SOUND, 3)
 pygame.mixer.Sound.set_volume(BULLET_FIRE_SOUND, 0.2)
 
 #loading Images
