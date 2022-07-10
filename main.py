@@ -29,9 +29,13 @@ BORDER = pygame.Rect(BORDER_START, 0, BORDER_WIDTH, HEIGHT)
 WIN = pygame.display.set_mode(SIZE)
 pygame.display.set_caption("First Game")
 
-#loading Player Images
+#loading Images
+SPACE = pygame.image.load(os.path.join('Assets','space.png'))
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.png'))
+
+#transform Images
+SPACE = pygame.transform.scale(SPACE, SIZE)
 YELLOW_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, SPACESHIP_SIZE), 90)
 RED_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, SPACESHIP_SIZE), -90)
 
@@ -41,7 +45,7 @@ RED_HIT = pygame.USEREVENT + 2
 
 
 def draw_window(yellow, red, yellow_bullets, red_bullets):
-    WIN.fill(BACKGROUND)
+    WIN.blit(SPACE, (0, 0))
     pygame.draw.rect(WIN, BORDER_COLOR, BORDER)
     WIN.blit(YELLOW_SPACESHIP_IMAGE, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP_IMAGE, (red.x, red.y))
