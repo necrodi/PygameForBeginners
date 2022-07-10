@@ -10,8 +10,8 @@ BORDER_WIDTH = 10
 FPS = 60
 DELAY = 5000 #in milliseconds
 VEL = 5
-BULLETS_MAX = 3
-BULLET_VEL = 7
+BULLETS_MAX = 5
+BULLET_VEL = 12
 BULLET_SIZE = BULLET_WIDTH, BULLET_HEIGHT = 10, 5
 SPACESHIP_OFFSET_Y = 15
 SPACESHIP_OFFSET_X = 15
@@ -23,8 +23,7 @@ BORDER_END = WIDTH/2 + BORDER_WIDTH/2
 SPACESHIP_SIZE = SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 46, 32
 
 #COLORS & FONTS
-BORDER_COLOR = (255, 255, 255)
-BACKGROUND = (10, 10, 10)
+BORDER_COLOR = (10, 10, 10)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
@@ -37,6 +36,7 @@ WIN = pygame.display.set_mode(SIZE)
 pygame.display.set_caption("First Game")
 
 #SOUNDS
+AMBIENCE = pygame.mixer.Sound(os.path.join('Assets', 'spaceship-ambience-with-effects-21420.wav'))
 BULLET_FIRE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'teleport-14639.wav'))
 BULLET_HIT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'low-impactwav-14905.wav'))
 pygame.mixer.Sound.set_volume(BULLET_FIRE_SOUND, 0.2)
@@ -129,6 +129,7 @@ def draw_winner(text):
     pygame.time.delay(5000)
     
 def main():
+    AMBIENCE.play()
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     
