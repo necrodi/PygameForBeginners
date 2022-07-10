@@ -1,28 +1,32 @@
 from tkinter import Y
 import pygame
 import os
+pygame.font.init()
 
 #modifiable CONSTANTS
 SIZE = WIDTH, HEIGHT = 900,500
 BORDER_WIDTH = 10
 FPS = 60
 VEL = 5
-SPACESHIP_OFFSET_Y = 15
-SPACESHIP_OFFSET_X = 15
 BULLETS_MAX = 3
 BULLET_VEL = 7
 BULLET_SIZE = BULLET_WIDTH, BULLET_HEIGHT = 10, 5
+SPACESHIP_OFFSET_Y = 15
+SPACESHIP_OFFSET_X = 15
+TEXT_PADDING = 10
 
 #immutable CONSTANTS
 BORDER_START = WIDTH/2 - BORDER_WIDTH/2
 BORDER_END = WIDTH/2 + BORDER_WIDTH/2
 SPACESHIP_SIZE = SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 46, 32
 
-#COLORS
+#COLORS & FONTS
 BORDER_COLOR = (255, 255, 255)
 BACKGROUND = (10, 10, 10)
+WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+HEATH_FONT = pygame.font.SysFont('calibri', 40, True)
 
 #WINDOW Objects
 BORDER = pygame.Rect(BORDER_START, 0, BORDER_WIDTH, HEIGHT)
@@ -44,9 +48,15 @@ YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
 
 
-def draw_window(yellow, red, yellow_bullets, red_bullets):
+def draw_window(yellow, red, yellow_bullets, red_bullets, yellow_health, red_health):
     WIN.blit(SPACE, (0, 0))
     pygame.draw.rect(WIN, BORDER_COLOR, BORDER)
+    
+    yellow_health_text = HEATH_FONT.render("Health: " + str(yellow_health), 1, WHITE)
+    red_health_text = HEATH_FONT.render("Health: " + str(red_health), 1, WHITE)
+    
+    WIN.blit(yellow_health_text, (TEXT_PADDING, TEXT_PADDING))
+    WIN.blit(red_health_text, (WIDTH - red_health_text.get_width() - TEXT_PADDING, TEXT_PADDING))
     WIN.blit(YELLOW_SPACESHIP_IMAGE, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP_IMAGE, (red.x, red.y))
     
@@ -56,6 +66,7 @@ def draw_window(yellow, red, yellow_bullets, red_bullets):
         pygame.draw.rect(WIN, RED, bullet)
     
     pygame.display.update()
+    
     
 def yellow_move(keys_pressed, rect):
     if keys_pressed[pygame.K_a] and (rect.left - VEL) > 0: #LEFT
@@ -93,7 +104,7 @@ def handle_bullets(bullets, direction, target, event):
         
         #target collision
         if target.colliderect(bullet):
-            pygame.event.Event(event)
+            pygame.event.post(pygame.event.Event(event))
             bullets.remove(bullet)
         
         #Off-Screen despawn
@@ -113,9 +124,13 @@ def main():
     clock = pygame.time.Clock()
     run = True
     
+    yellow_health = 10
+    red_health = 10
+    
     while run:
         clock.tick(FPS)
         for event in pygame.event.get():
+            print(event)
             if event.type == pygame.QUIT:
                 run = False
                 
@@ -127,12 +142,27 @@ def main():
                 if event.key == pygame.K_RCTRL and len(red_bullets) < BULLETS_MAX:
                     bullet = pygame.Rect(red.left, red.centery, BULLET_WIDTH, BULLET_HEIGHT)
                     red_bullets.append(bullet)
+                    
+            if event.type == YELLOW_HIT:
+                yellow_health -= 1
+                
+            if event.type == RED_HIT:
+                red_health -= 1
+                
+                
+            winner_text = ""
+            if yellow_health <= 0:
+                winner_text = "Red Wins!"
+            if red_health <= 0:
+                winner_text = "Yellow Wins!"
+            if winner_text != "":
+                pass
         
         keys_pressed = pygame.key.get_pressed()
         yellow_move(keys_pressed, yellow)
         red_move(keys_pressed, red)
         
-        draw_window(yellow, red, yellow_bullets, red_bullets)
+        draw_window(yellow, red, yellow_bullets, red_bullets, yellow_health, red_health)
         
         handle_all_bullets(yellow_bullets, red_bullets, yellow, red)
     pygame.quit()
