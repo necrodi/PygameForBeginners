@@ -2,6 +2,7 @@ from tkinter import Y
 import pygame
 import os
 pygame.font.init()
+pygame.mixer.init()
 
 #modifiable CONSTANTS
 SIZE = WIDTH, HEIGHT = 900,500
@@ -34,6 +35,11 @@ WINNER_FONT = pygame.font.SysFont('calibri', 40, True)
 BORDER = pygame.Rect(BORDER_START, 0, BORDER_WIDTH, HEIGHT)
 WIN = pygame.display.set_mode(SIZE)
 pygame.display.set_caption("First Game")
+
+#SOUNDS
+BULLET_FIRE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'teleport-14639.wav'))
+BULLET_HIT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'low-impactwav-14905.wav'))
+pygame.mixer.Sound.set_volume(BULLET_FIRE_SOUND, 0.2)
 
 #loading Images
 SPACE = pygame.image.load(os.path.join('Assets','space.png'))
@@ -147,16 +153,20 @@ def main():
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < BULLETS_MAX:
                     bullet = pygame.Rect(yellow.right, yellow.centery, BULLET_WIDTH, BULLET_HEIGHT)
                     yellow_bullets.append(bullet)
+                    BULLET_FIRE_SOUND.play()
                     
                 if event.key == pygame.K_RCTRL and len(red_bullets) < BULLETS_MAX:
                     bullet = pygame.Rect(red.left, red.centery, BULLET_WIDTH, BULLET_HEIGHT)
                     red_bullets.append(bullet)
+                    BULLET_FIRE_SOUND.play()
                     
             if event.type == YELLOW_HIT:
                 yellow_health -= 1
+                BULLET_HIT_SOUND.play()
                 
             if event.type == RED_HIT:
                 red_health -= 1
+                BULLET_HIT_SOUND.play()
                 
                 
             winner_text = ""
