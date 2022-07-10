@@ -7,6 +7,7 @@ pygame.font.init()
 SIZE = WIDTH, HEIGHT = 900,500
 BORDER_WIDTH = 10
 FPS = 60
+DELAY = 5000 #in milliseconds
 VEL = 5
 BULLETS_MAX = 3
 BULLET_VEL = 7
@@ -27,6 +28,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 HEATH_FONT = pygame.font.SysFont('calibri', 40, True)
+WINNER_FONT = pygame.font.SysFont('calibri', 40, True)
 
 #WINDOW Objects
 BORDER = pygame.Rect(BORDER_START, 0, BORDER_WIDTH, HEIGHT)
@@ -114,6 +116,12 @@ def handle_bullets(bullets, direction, target, event):
         elif direction == "left" and bullet.right < 0:
             bullets.remove(bullet)
     
+def draw_winner(text):
+    draw_text = WINNER_FONT.render(text, 1, WHITE)
+    WIN.blit(draw_text, (WIDTH/2 - draw_text.get_width()/2, HEIGHT/2 - draw_text.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(5000)
+    
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
@@ -133,6 +141,7 @@ def main():
             print(event)
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < BULLETS_MAX:
@@ -156,7 +165,9 @@ def main():
             if red_health <= 0:
                 winner_text = "Yellow Wins!"
             if winner_text != "":
-                pass
+                draw_winner(winner_text)
+                run = False
+                break
         
         keys_pressed = pygame.key.get_pressed()
         yellow_move(keys_pressed, yellow)
@@ -165,7 +176,8 @@ def main():
         draw_window(yellow, red, yellow_bullets, red_bullets, yellow_health, red_health)
         
         handle_all_bullets(yellow_bullets, red_bullets, yellow, red)
-    pygame.quit()
+    
+    main()
 
 if __name__ == "__main__":
     main()
