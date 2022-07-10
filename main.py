@@ -21,6 +21,8 @@ SPACESHIP_SIZE = SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 46, 32
 #COLORS
 BORDER_COLOR = (255, 255, 255)
 BACKGROUND = (10, 10, 10)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 #WINDOW Objects
 BORDER = pygame.Rect(BORDER_START, 0, BORDER_WIDTH, HEIGHT)
@@ -33,11 +35,22 @@ RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.pn
 YELLOW_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, SPACESHIP_SIZE), 90)
 RED_SPACESHIP_IMAGE = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, SPACESHIP_SIZE), -90)
 
-def draw_window(yellow, red):
+#USER EVENTS
+YELLOW_HIT = pygame.USEREVENT + 1
+RED_HIT = pygame.USEREVENT + 2
+
+
+def draw_window(yellow, red, yellow_bullets, red_bullets):
     WIN.fill(BACKGROUND)
     pygame.draw.rect(WIN, BORDER_COLOR, BORDER)
     WIN.blit(YELLOW_SPACESHIP_IMAGE, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP_IMAGE, (red.x, red.y))
+    
+    for bullet in yellow_bullets:
+        pygame.draw.rect(WIN, YELLOW, bullet)
+    for bullet in red_bullets:
+        pygame.draw.rect(WIN, RED, bullet)
+    
     pygame.display.update()
     
 def yellow_move(keys_pressed, rect):
@@ -59,7 +72,24 @@ def red_move(keys_pressed, rect):
         rect.y -= VEL
     if keys_pressed[pygame.K_DOWN] and (rect.bottom + VEL) < HEIGHT - SPACESHIP_OFFSET_Y: #DOWN
         rect.y += VEL
+          
+def handle_all_bullets(yellow_bullets, red_bullets, yellow, red):
+    handle_bullets(yellow_bullets, "right", red, RED_HIT)
+    handle_bullets(red_bullets, "left", yellow, YELLOW_HIT)
+
+def handle_bullets(bullets, direction, target, event):
+    for bullet in bullets:
+        if direction == "left":
+            bullet.x -= BULLET_VEL
+        elif direction == "right":
+            bullet.x += BULLET_VEL
+        else:
+            raise Exception ("wrong direction given. directioin should be either 'left' or 'right'")
         
+        if target.colliderect(bullet):
+            pygame.event.Event(event)
+            bullets.remove(bullet)
+    
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
@@ -89,8 +119,10 @@ def main():
         yellow_move(keys_pressed, yellow)
         red_move(keys_pressed, red)
         
-                
-        draw_window(yellow, red)
+        draw_window(yellow, red, yellow_bullets, red_bullets)
+        print(yellow_bullets, red_bullets)
+        
+        handle_all_bullets(yellow_bullets, red_bullets, yellow, red)
     pygame.quit()
 
 if __name__ == "__main__":
