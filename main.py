@@ -79,6 +79,7 @@ def handle_all_bullets(yellow_bullets, red_bullets, yellow, red):
 
 def handle_bullets(bullets, direction, target, event):
     for bullet in bullets:
+        #update position
         if direction == "left":
             bullet.x -= BULLET_VEL
         elif direction == "right":
@@ -86,8 +87,16 @@ def handle_bullets(bullets, direction, target, event):
         else:
             raise Exception ("wrong direction given. directioin should be either 'left' or 'right'")
         
+        #target collision
         if target.colliderect(bullet):
             pygame.event.Event(event)
+            bullets.remove(bullet)
+        
+        #Off-Screen despawn
+        elif direction == "right" and bullet.left > WIDTH:
+            bullets.remove(bullet)
+            
+        elif direction == "left" and bullet.right < 0:
             bullets.remove(bullet)
     
 def main():
@@ -120,7 +129,6 @@ def main():
         red_move(keys_pressed, red)
         
         draw_window(yellow, red, yellow_bullets, red_bullets)
-        print(yellow_bullets, red_bullets)
         
         handle_all_bullets(yellow_bullets, red_bullets, yellow, red)
     pygame.quit()
